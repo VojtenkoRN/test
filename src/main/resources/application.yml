@@ -1,0 +1,19 @@
+quarkus:
+  log:
+    console:
+      enable: true
+      json: false
+      level: DEBUG
+  datasource:
+    db-kind: postgresql
+    username: ${DATABASE_USERNAME:test_usr}
+    password: ${DATABASE_PASSWORD:password}
+    jdbc:
+      url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5499}/${DATABASE_NAME:test_db}?currentSchema=test
+  flyway:
+    default-schema: test
+    locations: db/migration,testdata
+    migrate-at-start: true
+    validate-on-migrate: true
+    ignore-missing-migrations: true
+    ignore-future-migrations: true

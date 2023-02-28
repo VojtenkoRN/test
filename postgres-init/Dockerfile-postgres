@@ -1,0 +1,6 @@
+FROM timescale/timescaledb:latest-pg14
+
+ENV POSTGRES_PASSWORD=postgres
+ENV TZ=Europe/Moscow
+
+ADD ./data/* /docker-entrypoint-initdb.d/

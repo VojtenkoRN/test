@@ -1,0 +1,56 @@
+version: "3.6"
+
+services:
+  test-db:
+    build:
+      context: ./postgres-init/
+      dockerfile: Dockerfile-postgres
+    image: postgres-image
+    container_name: test-db
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Moscow
+    ports:
+      - 5499:5432
+    networks:
+      - test-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "2"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.native
+    image: test-app
+    container_name: test
+    restart: unless-stopped
+    depends_on:
+      - test-db
+    environment:
+      TZ: Europe/Moscow
+      DATABASE_HOST: test-db
+      DATABASE_PORT: 5432
+    networks:
+      - test-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2048M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "2"
+
+networks:
+  test-network:
+    name: test-network
+    driver: bridge
